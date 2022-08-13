@@ -1,56 +1,25 @@
 package core
 
-type ZhongBiaoZuHe struct {
-	Zuhe              []int
-	Avgprice          float64
-	ZhongbiaoCompanys []ZhongbiaoCompany
-	Count             map[string]int
+type Result struct {
+	Combination []int
+	AvgPrice    float64
+	Companies   []InRandomPriceWinTheBidding
+	Count       map[string]int
 }
 
-type ZhongbiaoCompany struct {
-	Randomprice float64
-	Zhongbiao   Company
+type InRandomPriceWinTheBidding struct {
+	RandomPrice             float64
+	TheCompanyWinTheBidding Company
 }
 
-func CalculateZhongbiao(zuhe [][]int, companys []Company, randomValue []float64) []ZhongBiaoZuHe {
+func CalculateResult(combination [][]int, select_companys []Company, fixed_companys []Company, randomValue []float64) []Result {
 
-	var zhongbiao []ZhongBiaoZuHe
+	var r []Result
 
-	for _, z := range zuhe {
+	for _, z := range combination {
 		var prices []float64
 		var cs []Company
-		var zhongbiaocompany []ZhongbiaoCompany
-		for _, c := range z {
-			prices = append(prices, companys[c].Price)
-			cs = append(cs, companys[c])
-		}
-		randomPrices := CalculateRandomPrices(AvgPrice(prices), randomValue)
-
-		for _, rp := range randomPrices {
-			zhongbiaocompany = append(zhongbiaocompany, ZhongbiaoCompany{
-				Randomprice: rp,
-				Zhongbiao:   Zhongbiao(rp, cs),
-			})
-		}
-		zhongbiao = append(zhongbiao, ZhongBiaoZuHe{
-			Zuhe:              z,
-			Avgprice:          AvgPrice(prices),
-			ZhongbiaoCompanys: zhongbiaocompany,
-			Count:             CountZhongbiao(zhongbiaocompany),
-		})
-	}
-
-	return zhongbiao
-}
-
-func CalculateZhongbiaoWithFixed(zuhe [][]int, select_companys []Company, fixed_companys []Company, randomValue []float64) []ZhongBiaoZuHe {
-
-	var zhongbiao []ZhongBiaoZuHe
-
-	for _, z := range zuhe {
-		var prices []float64
-		var cs []Company
-		var zhongbiaocompany []ZhongbiaoCompany
+		var zhongbiaocompany []InRandomPriceWinTheBidding
 		for _, c := range z {
 			prices = append(prices, select_companys[c].Price)
 			cs = append(cs, select_companys[c])
@@ -62,28 +31,28 @@ func CalculateZhongbiaoWithFixed(zuhe [][]int, select_companys []Company, fixed_
 		randomPrices := CalculateRandomPrices(AvgPrice(prices), randomValue)
 
 		for _, rp := range randomPrices {
-			zhongbiaocompany = append(zhongbiaocompany, ZhongbiaoCompany{
-				Randomprice: rp,
-				Zhongbiao:   Zhongbiao(rp, cs),
+			zhongbiaocompany = append(zhongbiaocompany, InRandomPriceWinTheBidding{
+				RandomPrice:             rp,
+				TheCompanyWinTheBidding: ReturnCompanyWhoWinTheBidding(rp, cs),
 			})
 		}
-		zhongbiao = append(zhongbiao, ZhongBiaoZuHe{
-			Zuhe:              z,
-			Avgprice:          AvgPrice(prices),
-			ZhongbiaoCompanys: zhongbiaocompany,
-			Count:             CountZhongbiao(zhongbiaocompany),
+		r = append(r, Result{
+			Combination: z,
+			AvgPrice:    AvgPrice(prices),
+			Companies:   zhongbiaocompany,
+			Count:       CountTheResult(zhongbiaocompany),
 		})
 	}
 
-	return zhongbiao
+	return r
 }
 
-func CountZhongbiao(zbc []ZhongbiaoCompany) map[string]int {
+func CountTheResult(zbc []InRandomPriceWinTheBidding) map[string]int {
 	var count map[string]int
 	count = make(map[string]int)
 
 	for _, d := range zbc {
-		name := d.Zhongbiao.Name
+		name := d.TheCompanyWinTheBidding.Name
 		if _, ok := count[name]; ok {
 			count[name]++
 		} else {

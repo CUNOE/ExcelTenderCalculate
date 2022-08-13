@@ -1,5 +1,41 @@
 package core
 
+import "sort"
+
+func DeleteSlice(a []int) []int {
+	ret := make([]int, 0, len(a))
+	//var ret []int
+	for _, val := range a {
+		if val != 0 {
+			ret = append(ret, val)
+		}
+	}
+	return ret
+}
+
+func RemoveDuplicatesInPlace(userIDs []int) []int {
+	// 如果有0或1个元素，则返回切片本身。
+	if len(userIDs) < 2 {
+		return userIDs
+	}
+
+	//  使切片升序排序
+	sort.SliceStable(userIDs, func(i, j int) bool { return userIDs[i] < userIDs[j] })
+
+	uniqPointer := 0
+
+	for i := 1; i < len(userIDs); i++ {
+		// 比较当前元素和唯一指针指向的元素
+		//  如果它们不相同，则将项写入唯一指针的右侧。
+		if userIDs[uniqPointer] != userIDs[i] {
+			uniqPointer++
+			userIDs[uniqPointer] = userIDs[i]
+		}
+	}
+
+	return userIDs[:uniqPointer+1]
+}
+
 func IsContain(arr []int, num int) bool {
 	for _, v := range arr {
 		if v == num {
@@ -33,7 +69,7 @@ func CalculateRandomPrices(avgprice float64, randomValue []float64) []float64 {
 	return RandomPrices
 }
 
-func Zhongbiao(randomPrice float64, companys []Company) Company {
+func ReturnCompanyWhoWinTheBidding(randomPrice float64, companys []Company) Company {
 	var de []float64
 
 	for _, v := range companys {
@@ -41,7 +77,7 @@ func Zhongbiao(randomPrice float64, companys []Company) Company {
 	}
 
 	if IsPositiveNums(de) {
-		d := get_zuijin(0, de)
+		d := numClosestToZero_PostiveNums(0, de)
 
 		price := randomPrice + d
 
@@ -51,7 +87,7 @@ func Zhongbiao(randomPrice float64, companys []Company) Company {
 			}
 		}
 	} else {
-		d := zuijin_Minus(de)
+		d := numClosestToZero_WithMinus(de)
 		price := randomPrice + d
 		for _, v := range companys {
 			if v.Price == price {
@@ -72,7 +108,7 @@ func IsPositiveNums(nums []float64) bool {
 	return true
 }
 
-func zuijin_Minus(nums []float64) float64 {
+func numClosestToZero_WithMinus(nums []float64) float64 {
 	max := 0.0
 	for _, v := range nums {
 		if v < 0.0 {
@@ -87,7 +123,7 @@ func zuijin_Minus(nums []float64) float64 {
 	return max
 }
 
-func get_zuijin(this float64, arr []float64) float64 {
+func numClosestToZero_PostiveNums(this float64, arr []float64) float64 {
 	min := 0.0
 	if this == arr[0] {
 		return arr[0]
