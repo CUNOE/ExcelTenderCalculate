@@ -50,13 +50,19 @@ func main() {
 		log.Printf("写入失败，错误信息：%v\n", err)
 		fmt.Println("按任意键退出...")
 		var input string
-		fmt.Scanln(&input)
+		_, err := fmt.Scanln(&input)
+		if err != nil {
+			return
+		}
 	}
 
 	log.Printf("写入完成\n")
 	log.Printf("任务完成，耗时%s\n", time.Since(start))
 	fmt.Println("按任意键退出...")
 	var input string
-	fmt.Scanln(&input)
+	_, err = fmt.Scanln(&input)
+	if err != nil {
+		return
+	}
 
 }

@@ -23,14 +23,14 @@ func ReadExcel(path string) ([]Company, []float64, []int, int) {
 	}
 
 	var randomValue []float64
-	var companys []Company
+	var companies []Company
 	var fixed []int
 	var m int
 
 	rows, err := f.GetRows("Sheet1")
 	if err != nil {
 		log.Printf("请检查input.xlsx文件是否存在Sheet1表格\n")
-		log.Fatal("读取Excel文件失败，错误信息：%v\n", err)
+		log.Fatalf("读取Excel文件失败，错误信息：%v\n", err)
 		return nil, nil, nil, 0
 	}
 
@@ -54,7 +54,7 @@ func ReadExcel(path string) ([]Company, []float64, []int, int) {
 				// 读取投标公司
 				if k == 2 {
 					p, _ := strconv.ParseFloat(r, 64)
-					companys = append(companys, Company{
+					companies = append(companies, Company{
 						ID:    d,
 						Name:  row[1],
 						Price: p,
@@ -75,6 +75,6 @@ func ReadExcel(path string) ([]Company, []float64, []int, int) {
 	fixed = DeleteSlice(fixed)
 	fixed = RemoveDuplicatesInPlace(fixed)
 
-	return companys, randomValue, fixed, m
+	return companies, randomValue, fixed, m
 
 }

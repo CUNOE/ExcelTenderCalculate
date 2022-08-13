@@ -66,20 +66,20 @@ func AvgPrice(nums []float64) float64 {
 	return sum / float64(len(nums))
 }
 
-// GetRandomPrice 计算随机相对应价格
-func CalculateRandomPrices(avgprice float64, randomValue []float64) []float64 {
+// CalculateRandomPrices 计算随机相对应价格
+func CalculateRandomPrices(avgPrice float64, randomValue []float64) []float64 {
 	var RandomPrices []float64
 	for _, v := range randomValue {
-		RandomPrices = append(RandomPrices, avgprice*(1+(v*0.01)))
+		RandomPrices = append(RandomPrices, avgPrice*(1+(v*0.01)))
 	}
 	return RandomPrices
 }
 
 // ReturnCompanyWhoWinTheBidding 计算在某个随机相对应价格下中标的公司
-func ReturnCompanyWhoWinTheBidding(randomPrice float64, companys []Company) Company {
+func ReturnCompanyWhoWinTheBidding(randomPrice float64, companies []Company) Company {
 	var de []float64
 
-	for _, v := range companys {
+	for _, v := range companies {
 		de = append(de, v.Price-randomPrice)
 	}
 
@@ -88,7 +88,7 @@ func ReturnCompanyWhoWinTheBidding(randomPrice float64, companys []Company) Comp
 
 		price := randomPrice + d
 
-		for _, v := range companys {
+		for _, v := range companies {
 			if v.Price == price {
 				return v
 			}
@@ -96,7 +96,7 @@ func ReturnCompanyWhoWinTheBidding(randomPrice float64, companys []Company) Comp
 	} else {
 		d := numClosestToZeroWithMinus(de)
 		price := randomPrice + d
-		for _, v := range companys {
+		for _, v := range companies {
 			if v.Price == price {
 				return v
 			}
