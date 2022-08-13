@@ -12,26 +12,26 @@ type InRandomPriceWinTheBidding struct {
 	TheCompanyWinTheBidding Company
 }
 
-func CalculateResult(combination [][]int, select_companys []Company, fixed_companys []Company, randomValue []float64) []Result {
+func CalculateResult(combination [][]int, selectCompanies []Company, fixedCompanies []Company, randomValue []float64) []Result {
 
 	var r []Result
 
 	for _, z := range combination {
 		var prices []float64
 		var cs []Company
-		var zhongbiaocompany []InRandomPriceWinTheBidding
+		var companiesWinTheBidding []InRandomPriceWinTheBidding
 		for _, c := range z {
-			prices = append(prices, select_companys[c].Price)
-			cs = append(cs, select_companys[c])
+			prices = append(prices, selectCompanies[c].Price)
+			cs = append(cs, selectCompanies[c])
 		}
-		for _, c := range fixed_companys {
+		for _, c := range fixedCompanies {
 			prices = append(prices, c.Price)
 			cs = append(cs, c)
 		}
 		randomPrices := CalculateRandomPrices(AvgPrice(prices), randomValue)
 
 		for _, rp := range randomPrices {
-			zhongbiaocompany = append(zhongbiaocompany, InRandomPriceWinTheBidding{
+			companiesWinTheBidding = append(companiesWinTheBidding, InRandomPriceWinTheBidding{
 				RandomPrice:             rp,
 				TheCompanyWinTheBidding: ReturnCompanyWhoWinTheBidding(rp, cs),
 			})
@@ -39,8 +39,8 @@ func CalculateResult(combination [][]int, select_companys []Company, fixed_compa
 		r = append(r, Result{
 			Combination: z,
 			AvgPrice:    AvgPrice(prices),
-			Companies:   zhongbiaocompany,
-			Count:       CountTheResult(zhongbiaocompany),
+			Companies:   companiesWinTheBidding,
+			Count:       CountTheResult(companiesWinTheBidding),
 		})
 	}
 

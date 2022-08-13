@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// Output 将数据写入Excel文件
 func Output(results []Result, selectCompanies []Company, fixedCompanies []Company, randomValue []float64, path string) error {
 	f := excelize.NewFile()
 

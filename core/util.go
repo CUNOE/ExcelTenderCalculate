@@ -2,6 +2,7 @@ package core
 
 import "sort"
 
+// DeleteSlice 从切片中删除 0 元素
 func DeleteSlice(a []int) []int {
 	ret := make([]int, 0, len(a))
 	//var ret []int
@@ -13,6 +14,7 @@ func DeleteSlice(a []int) []int {
 	return ret
 }
 
+// RemoveDuplicatesInPlace 删除切片中的重复元素
 func RemoveDuplicatesInPlace(userIDs []int) []int {
 	// 如果有0或1个元素，则返回切片本身。
 	if len(userIDs) < 2 {
@@ -36,6 +38,7 @@ func RemoveDuplicatesInPlace(userIDs []int) []int {
 	return userIDs[:uniqPointer+1]
 }
 
+// IsContain 查询切片中是否存在某个元素
 func IsContain(arr []int, num int) bool {
 	for _, v := range arr {
 		if v == num {
@@ -45,6 +48,7 @@ func IsContain(arr []int, num int) bool {
 	return false
 }
 
+// GenerateNums 根据n生成有序数组
 func GenerateNums(n int) []int {
 	var nums []int
 	for i := 0; i < n; i++ {
@@ -53,6 +57,7 @@ func GenerateNums(n int) []int {
 	return nums
 }
 
+// AvgPrice 计算平均值
 func AvgPrice(nums []float64) float64 {
 	sum := 0.0
 	for _, v := range nums {
@@ -61,6 +66,7 @@ func AvgPrice(nums []float64) float64 {
 	return sum / float64(len(nums))
 }
 
+// GetRandomPrice 计算随机相对应价格
 func CalculateRandomPrices(avgprice float64, randomValue []float64) []float64 {
 	var RandomPrices []float64
 	for _, v := range randomValue {
@@ -69,6 +75,7 @@ func CalculateRandomPrices(avgprice float64, randomValue []float64) []float64 {
 	return RandomPrices
 }
 
+// ReturnCompanyWhoWinTheBidding 计算在某个随机相对应价格下中标的公司
 func ReturnCompanyWhoWinTheBidding(randomPrice float64, companys []Company) Company {
 	var de []float64
 
@@ -77,7 +84,7 @@ func ReturnCompanyWhoWinTheBidding(randomPrice float64, companys []Company) Comp
 	}
 
 	if IsPositiveNums(de) {
-		d := numClosestToZero_PostiveNums(0, de)
+		d := numClosestToZeroPositiveNums(0, de)
 
 		price := randomPrice + d
 
@@ -87,7 +94,7 @@ func ReturnCompanyWhoWinTheBidding(randomPrice float64, companys []Company) Comp
 			}
 		}
 	} else {
-		d := numClosestToZero_WithMinus(de)
+		d := numClosestToZeroWithMinus(de)
 		price := randomPrice + d
 		for _, v := range companys {
 			if v.Price == price {
@@ -99,6 +106,7 @@ func ReturnCompanyWhoWinTheBidding(randomPrice float64, companys []Company) Comp
 	return Company{}
 }
 
+// IsPositiveNums 检查数组中是否全为正数
 func IsPositiveNums(nums []float64) bool {
 	for _, n := range nums {
 		if n < 0 {
@@ -108,7 +116,8 @@ func IsPositiveNums(nums []float64) bool {
 	return true
 }
 
-func numClosestToZero_WithMinus(nums []float64) float64 {
+// numClosestToZeroWithMinus 返回数组中最接近0的负数
+func numClosestToZeroWithMinus(nums []float64) float64 {
 	max := 0.0
 	for _, v := range nums {
 		if v < 0.0 {
@@ -123,7 +132,8 @@ func numClosestToZero_WithMinus(nums []float64) float64 {
 	return max
 }
 
-func numClosestToZero_PostiveNums(this float64, arr []float64) float64 {
+// numClosestToZero_PositiveNums 返回数组中最接近0的正数
+func numClosestToZeroPositiveNums(this float64, arr []float64) float64 {
 	min := 0.0
 	if this == arr[0] {
 		return arr[0]

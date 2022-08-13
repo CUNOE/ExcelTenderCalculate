@@ -13,7 +13,7 @@ type Company struct {
 	Price float64
 }
 
-// 读取Excel文件
+// ReadExcel 读取Excel文件
 func ReadExcel(path string) ([]Company, []float64, []int, int) {
 	f, err := excelize.OpenFile(path)
 	if err != nil {

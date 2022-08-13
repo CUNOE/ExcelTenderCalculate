@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"log"
 )
 
@@ -29,7 +28,8 @@ func Combination(nums []int, m int) [][]int {
 //组合算法(从nums中取出m个数)
 func combinationResult(n int, m int) [][]int {
 	if m < 1 || m > n {
-		fmt.Println("Illegal argument. Param m must between 1 and len(nums).")
+		//fmt.Println("Illegal argument. Param m must between 1 and len(nums).")
+		log.Fatalf("Illegal argument. Param m must between 1 and len(nums).")
 		return [][]int{}
 	}
 	//保存最终结果的数组，总数直接通过数学公式计算
