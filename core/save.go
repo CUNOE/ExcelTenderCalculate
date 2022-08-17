@@ -21,12 +21,16 @@ func Output(results []Result, selectCompanies []Company, fixedCompanies []Compan
 	//	"top_left_cell": "A2",
 	//}`)
 
+	f.SetColWidth("Sheet1", "B", "B", 25)
+	f.SetColWidth("Sheet1", "E", "E", 10)
+	f.SetColWidth("Sheet1", "F", "F", 15)
+
 	cell, _ := excelize.CoordinatesToCellName(1, 1)
-	f.SetCellValue("Sheet1", cell, "招标公司编号")
+	f.SetCellValue("Sheet1", cell, "编号")
 	cell, _ = excelize.CoordinatesToCellName(2, 1)
-	f.SetCellValue("Sheet1", cell, "招标公司名称")
+	f.SetCellValue("Sheet1", cell, "公司名称")
 	cell, _ = excelize.CoordinatesToCellName(3, 1)
-	f.SetCellValue("Sheet1", cell, "招标公司价格")
+	f.SetCellValue("Sheet1", cell, "投标价格")
 	cell, _ = excelize.CoordinatesToCellName(4, 1)
 	f.SetCellValue("Sheet1", cell, "平均价格")
 	cell, _ = excelize.CoordinatesToCellName(5, 1)

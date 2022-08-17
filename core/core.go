@@ -47,6 +47,38 @@ func CalculateResult(combination [][]int, selectCompanies []Company, fixedCompan
 	return r
 }
 
+func CalculateOneResult(Companies []Company, randomValue []float64) []Result {
+
+	var r []Result
+
+	var prices []float64
+	var companiesWinTheBidding []InRandomPriceWinTheBidding
+	//for _, c := range z {
+	//	prices = append(prices, selectCompanies[c].Price)
+	//	cs = append(cs, selectCompanies[c])
+	//}
+
+	for _, c := range Companies {
+		prices = append(prices, c.Price)
+	}
+
+	randomPrices := CalculateRandomPrices(AvgPrice(prices), randomValue)
+
+	for _, rp := range randomPrices {
+		companiesWinTheBidding = append(companiesWinTheBidding, InRandomPriceWinTheBidding{
+			RandomPrice:             rp,
+			TheCompanyWinTheBidding: ReturnCompanyWhoWinTheBidding(rp, Companies),
+		})
+	}
+	r = append(r, Result{
+		AvgPrice:  AvgPrice(prices),
+		Companies: companiesWinTheBidding,
+		Count:     CountTheResult(companiesWinTheBidding),
+	})
+
+	return r
+}
+
 func CountTheResult(zbc []InRandomPriceWinTheBidding) map[string]int {
 	var count map[string]int
 	count = make(map[string]int)

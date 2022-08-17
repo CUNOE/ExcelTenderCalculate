@@ -8,30 +8,36 @@ import (
 )
 
 type Company struct {
-	ID    int
-	Name  string
-	Price float64
+	ID      int
+	Name    string
+	Price   float64
+	IsFixed bool
 }
 
 // ReadExcel 读取Excel文件
-func ReadExcel(path string) ([]Company, []float64, []int, int) {
+func ReadExcel(path string) ([]Company, []float64, int) {
 	f, err := excelize.OpenFile(path)
 	if err != nil {
 		fmt.Println(err)
 		log.Fatal(err)
-		return nil, nil, nil, 0
+		return nil, nil, 0
 	}
+
+	defer func() {
+		if err := f.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
 
 	var randomValue []float64
 	var companies []Company
-	var fixed []int
 	var m int
 
 	rows, err := f.GetRows("Sheet1")
 	if err != nil {
 		log.Printf("请检查input.xlsx文件是否存在Sheet1表格\n")
 		log.Fatalf("读取Excel文件失败，错误信息：%v\n", err)
-		return nil, nil, nil, 0
+		return nil, nil, 0
 	}
 
 	for d, row := range rows {
@@ -47,34 +53,29 @@ func ReadExcel(path string) ([]Company, []float64, []int, int) {
 		if d >= 1 {
 			for k, r := range row {
 				// 读取随机费率
-				if k == 4 {
+				if k == 6 && r != "" {
 					v, _ := strconv.ParseFloat(r, 64)
 					randomValue = append(randomValue, v)
 				}
-				// 读取投标公司
-				if k == 2 {
-					p, _ := strconv.ParseFloat(r, 64)
-					companies = append(companies, Company{
-						ID:    d,
-						Name:  row[1],
-						Price: p,
-					})
-				}
+			}
 
-				// 读取固定公司
-				if k == 6 {
-					f, _ := strconv.ParseInt(r, 10, 64)
-					fixed = append(fixed, int(f))
+			// 读取公司信息
+			if row[0] == "TRUE" && row[1] != "" && row[2] != "" && row[3] != "" {
+				if row[4] == "TRUE" {
+					id, _ := strconv.ParseInt(row[1], 10, 64)
+					price, _ := strconv.ParseFloat(row[3], 64)
+					companies = append(companies, Company{int(id), row[2], price, true})
+				} else {
+					id, _ := strconv.ParseInt(row[1], 10, 64)
+					price, _ := strconv.ParseFloat(row[3], 64)
+					companies = append(companies, Company{int(id), row[2], price, false})
 				}
-
 			}
 
 		}
 
 	}
-	fixed = DeleteSlice(fixed)
-	fixed = RemoveDuplicatesInPlace(fixed)
 
-	return companies, randomValue, fixed, m
+	return companies, randomValue, m
 
 }
