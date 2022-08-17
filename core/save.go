@@ -3,27 +3,85 @@ package core
 import (
 	"github.com/xuri/excelize/v2"
 	"log"
+	"strconv"
 )
 
 // Output 将数据写入Excel文件
 func Output(results []Result, selectCompanies []Company, fixedCompanies []Company, randomValue []float64, path string) error {
 	f := excelize.NewFile()
 
-	r := 2
-	s := 2
-	d := 2
+	r := 3
+	s := 3
+	d := 3
 
-	//f.SetPanes("Sheet1", `{
-	//	"freeze":true,
-	//	"split":false,
-	//	"x_split":0,
-	//	"y_split":1,
-	//	"top_left_cell": "A2",
-	//}`)
+	g := 2
+
+	start := 3
+	end := 3
+
+	f.SetPanes("Sheet1", `{
+		"freeze":true,
+		"split":false,
+		"x_split":0,
+		"y_split":1,
+		"top_left_cell": "A2"
+	}`)
+
+	styleMid, _ := f.NewStyle(&excelize.Style{
+		Fill: excelize.Fill{Type: "pattern", Color: []string{"#D9D9D9"}, Pattern: 1},
+	})
+
+	styleTitle, _ := f.NewStyle(&excelize.Style{
+		Font: &excelize.Font{Bold: true, Size: 12},
+		Border: []excelize.Border{
+			{Type: "left", Color: "#000000", Style: 2},
+			{Type: "top", Color: "#000000", Style: 2},
+			{Type: "bottom", Color: "#000000", Style: 2},
+			{Type: "right", Color: "#000000", Style: 2},
+		},
+		//Fill: excelize.Fill{Type: "pattern", Color: []string{"#FFFF00"}, Pattern: 1},
+	})
+
+	styleBody, _ := f.NewStyle(&excelize.Style{
+		//Fill: excelize.Fill{Color: []string{"#F2F2F2"}, Pattern: 1},
+		//Font: &excelize.Font{
+		//	Bold: true,
+		//	//Color: "#FA7D00",
+		//},
+		//Fill: excelize.Fill{Type: "pattern", Color: []string{"#F0F0F0"}, Pattern: 1},
+		Border: []excelize.Border{
+			{Type: "left", Color: "#000000", Style: 1},
+			{Type: "right", Color: "#000000", Style: 1},
+			{Type: "top", Color: "#000000", Style: 1},
+			{Type: "bottom", Color: "#000000", Style: 1},
+		},
+	})
+
+	//styleFill, _ := f.NewStyle(&excelize.Style{
+	//	Fill: excelize.Fill{Type: "pattern", Color: []string{"#E0EBF5"}, Pattern: 1},
+	//})
+
+	//styleBorder, _ := f.NewStyle(&excelize.Style{
+	//	Border: []excelize.Border{
+	//		{Type: "left", Color: "#000000", Style: 2},
+	//		{Type: "right", Color: "#000000", Style: 2},
+	//		{Type: "top", Color: "#000000", Style: 2},
+	//		{Type: "bottom", Color: "#000000", Style: 2},
+	//	},
+	//})
+
+	f.SetCellStyle("Sheet1", "A1", "K1", styleTitle)
 
 	f.SetColWidth("Sheet1", "B", "B", 25)
-	f.SetColWidth("Sheet1", "E", "E", 10)
-	f.SetColWidth("Sheet1", "F", "F", 15)
+	f.SetColWidth("Sheet1", "C", "C", 10)
+	f.SetColWidth("Sheet1", "D", "D", 10)
+	f.SetColWidth("Sheet1", "E", "E", 12)
+	f.SetColWidth("Sheet1", "F", "F", 17)
+	f.SetColWidth("Sheet1", "G", "G", 10)
+	f.SetColWidth("Sheet1", "H", "H", 10)
+	f.SetColWidth("Sheet1", "I", "I", 10)
+	f.SetColWidth("Sheet1", "J", "J", 10)
+	f.SetColWidth("Sheet1", "K", "K", 15)
 
 	cell, _ := excelize.CoordinatesToCellName(1, 1)
 	f.SetCellValue("Sheet1", cell, "编号")
@@ -98,15 +156,28 @@ func Output(results []Result, selectCompanies []Company, fixedCompanies []Compan
 			cell, _ = excelize.CoordinatesToCellName(8, s)
 			f.SetCellValue("Sheet1", cell, zbc.TheCompanyWinTheBidding.Price)
 			s++
+			end++
 		}
+		//log.Println(end)
+
+		//f.SetCellStyle("Sheet1", "A"+strconv.Itoa(start), "K"+strconv.Itoa(end-1), styleBorder)
+		f.SetCellStyle("Sheet1", "A"+strconv.Itoa(start), "J"+strconv.Itoa(end-1), styleBody)
+		//f.SetCellStyle("Sheet1", "A"+strconv.Itoa(start), "K"+strconv.Itoa(end-1), styleFill)
+
+		f.SetCellStyle("Sheet1", "A"+strconv.Itoa(g), "J"+strconv.Itoa(g), styleMid)
+		g = s
 		if len(z.Companies) >= len(z.Combination)+len(fixedCompanies) {
 			s++
 			r = s
 			d = s
+			start = s
+			end = s
 		} else {
 			r++
 			s = r
 			d = r
+			start = r
+			end = r
 		}
 
 	}

@@ -45,6 +45,10 @@ func main() {
 		log.Fatalf("固定投标单位数量大于抽取单位数量，请检查输入数据\n")
 		return
 	}
+	if len(companies) < m {
+		log.Fatalf("选择的投标单位数量小于抽取单位数量，请检查输入数据\n")
+		return
+	}
 
 	//log.Printf(string(m))
 	// 计算组合结果
@@ -64,13 +68,8 @@ func main() {
 	log.Printf("共需要写入%d条数据\n", len(result)*len(randomValue)+len(result))
 	err := core.Output(result, selectCompanies, fixedCompanies, randomValue, "output.xlsx")
 	if err != nil {
-		log.Printf("写入失败，错误信息：%v\n", err)
-		fmt.Println("按任意键退出...")
-		var input string
-		_, err := fmt.Scanln(&input)
-		if err != nil {
-			return
-		}
+		log.Fatalf("写入失败，错误信息：%v\n", err)
+		return
 	}
 
 	log.Printf("写入完成\n")
